@@ -1,0 +1,23 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "yuriistadnikov-api",
+      "image": "yuriistadnikov/yuriistadnikov-api:latest",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_DATASOURCE_URL",
+          "value": "jdbc:postgresql://awseb-e-3vcuugpsur-stack-awsebrdsdatabase-8jdwnirmbcbm.cdsmwc2euk0i.us-east-1.rds.amazonaws.com:5432/customer"
+        }
+      ]
+    }
+  ]
+}
