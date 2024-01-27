@@ -35,8 +35,8 @@ jobs:
       - name: Notify Slack deployment started
         run: >
           curl -X POST -H "Content-type:application/json"
-          --data "{'text':'[CD]  Deployment started'}"
-          $${{ secrets.SLACK_WEBHOOK_URL }}
+          --data "{'text':'[CD] Deployment started'}"
+          ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - uses: actions/setup-java@v4
         with:
@@ -54,7 +54,7 @@ jobs:
         run: >
           curl -X POST -H "Content-type:application/json"
           --data "{'text':'[CD] Building with maven'}"
-          $${{ secrets.SLACK_WEBHOOK_URL }}
+          ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Set build number
         id: build-number
@@ -67,7 +67,7 @@ jobs:
         run: >
           curl -X POST -H "Content-type:application/json"
           --data "{'text':'[CD] Image tag: $${{ steps.build-number.outputs.BUILD_NUMBER }}'} pushed to https://hub.docker.com/repository/docker/yuriistadnikov/yuriistadnikov-api"
-          $${{ secrets.SLACK_WEBHOOK_URL }}
+          ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Update Dockerrun.aws.json api image tag with build number
         run: |
@@ -81,7 +81,7 @@ jobs:
         run: >
           curl -X POST -H "Content-type:application/json"
           --data "{'text':'[CD] Starting deployment to Elastic Beanstalk'}"
-          $${{ secrets.SLACK_WEBHOOK_URL }} 
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
@@ -99,7 +99,7 @@ jobs:
         run: >
           curl -X POST -H "Content-type:application/json" 
           --data "{'text':'[CD] Committing to repo https://github.com/yuriistadnikov/spring-boot-fullstack'}"
-          $${{ secrets.SLACK_WEBHOOK_URL }} 
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
 
       - name: Commit and push Dockerrun.aws.json
         run: |
@@ -113,4 +113,4 @@ jobs:
         run: >
           curl -X POST -H "Content-type:application/json"
           --data "{'text':'[CD] Deployment and commit completed'}"
-          $${{ secrets.SLACK_WEBHOOK_URL }}
+          ${{ secrets.SLACK_WEBHOOK_URL }}
