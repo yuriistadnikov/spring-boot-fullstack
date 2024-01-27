@@ -66,7 +66,7 @@ jobs:
       - name: Notify Slack build number
         run: >
           curl -X POST -H "Content-type:application/json"
-          --data "{'text':'[CD] Image tag: $${{ steps.build-number.outputs.BUILD_NUMBER }}'} pushed to https://hub.docker.com/repository/docker/yuriistadnikov/yuriistadnikov-api"
+          --data "{'text':'[CD] Image tag: $${{ steps.build-number.outputs.BUILD_NUMBER }} pushed to https://hub.docker.com/repository/docker/yuriistadnikov/yuriistadnikov-api'}"
           ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Update Dockerrun.aws.json api image tag with build number
