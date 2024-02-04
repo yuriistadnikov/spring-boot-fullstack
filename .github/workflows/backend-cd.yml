@@ -35,7 +35,7 @@ jobs:
       - name: Slack commit message and sha
         run: >
           curl -X POST -H "Content-type:application/json"
-                    --data "{'Github: https://github.com/yuriistadnikov/spring-boot-fullstack/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}'}"
+                    --data "{'text':'Github: https://github.com/yuriistadnikov/spring-boot-fullstack/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}'}"
                     ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack deployment started
