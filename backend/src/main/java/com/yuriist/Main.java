@@ -30,7 +30,8 @@ public class Main {
                 Customer customer = new Customer(
                         firstName + " " + lastName,
                         firstName.toLowerCase() + "." + lastName.toLowerCase() + "@gmail.com",
-                        random.nextInt(20, 50)
+                        random.nextInt(20, 50),
+                        random.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE
                 );
                 customerRepository.save(customer);
             }

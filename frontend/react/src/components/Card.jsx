@@ -13,7 +13,8 @@ import {
     useColorModeValue, Tag,
 } from '@chakra-ui/react'
 
-export default function Card({ id, name, age, email }) {
+export default function Card({ id, name, age, email, gender }) {
+    const genderType = gender.toUpperCase() === "MALE" ? "men" : "women";
     return (
         <Center py={6}>
             <Box
@@ -36,7 +37,7 @@ export default function Card({ id, name, age, email }) {
                     <Avatar
                         size={'xl'}
                         src={
-                            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
+                            `https://randomuser.me/api/portraits/${genderType}/${id}.jpg`
                         }
                         css={{
                             border: '2px solid white',
@@ -51,7 +52,7 @@ export default function Card({ id, name, age, email }) {
                             {name}
                         </Heading>
                         <Text color={'gray.500'}>{email}</Text>
-                        <Text color={'gray.500'}>{age}</Text>
+                        <Text color={'gray.500'}>{`Age ${age} | ${gender.toUpperCase()}`}</Text>
                     </Stack>
                 </Box>
             </Box>

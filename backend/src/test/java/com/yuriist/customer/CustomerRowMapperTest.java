@@ -42,11 +42,13 @@ class CustomerRowMapperTest {
         String customerName = "Alex";
         String customerEmail = "alex@gmail.com";
         Integer customerAge = 20;
+        Customer.Gender gender = Customer.Gender.MALE;
 
         Mockito.when(resultSet.getLong("id")).thenReturn(customerId);
         Mockito.when(resultSet.getString("name")).thenReturn(customerName);
         Mockito.when(resultSet.getString("email")).thenReturn(customerEmail);
         Mockito.when(resultSet.getInt("age")).thenReturn(customerAge);
+        Mockito.when(resultSet.getString("gender")).thenReturn(gender.toString());
 
 
         //When
@@ -58,5 +60,6 @@ class CustomerRowMapperTest {
         assertThat(customer.getName()).isEqualTo(customerName);
         assertThat(customer.getEmail()).isEqualTo(customerEmail);
         assertThat(customer.getAge()).isEqualTo(customerAge);
+        assertThat(customer.getGender()).isEqualTo(gender);
     }
 }

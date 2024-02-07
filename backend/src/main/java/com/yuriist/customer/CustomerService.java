@@ -53,6 +53,10 @@ public class CustomerService {
             customer.setAge(customerUpdateRequest.getAge());
             hasChanges = true;
         }
+        if (Objects.nonNull(customerUpdateRequest.getGender()) && !customerUpdateRequest.getGender().equals(customer.getGender())) {
+            customer.setGender(customerUpdateRequest.getGender());
+            hasChanges = true;
+        }
         if (hasChanges) {
             customerDao.updateCustomer(customer);
         } else {
@@ -68,7 +72,8 @@ public class CustomerService {
                 new Customer(
                         customerRegistrationRequest.getName(),
                         customerRegistrationRequest.getEmail(),
-                        customerRegistrationRequest.getAge()
+                        customerRegistrationRequest.getAge(),
+                        customerRegistrationRequest.getGender()
                 )
         );
     }

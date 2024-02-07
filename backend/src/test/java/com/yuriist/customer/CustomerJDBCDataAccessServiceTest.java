@@ -55,6 +55,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
             assertThat(c.getName()).isEqualTo(customer.getName());
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
             assertThat(c.getAge()).isEqualTo(customer.getAge());
+            assertThat(c.getGender()).isEqualTo(customer.getGender());
         });
     }
 
@@ -88,6 +89,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
             assertThat(c.getName()).isEqualTo(customer.getName());
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
             assertThat(c.getAge()).isEqualTo(customer.getAge());
+            assertThat(c.getGender()).isEqualTo(customer.getGender());
         });
     }
 
@@ -156,6 +158,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         addedCustomer.setName(FAKER.name().fullName());
         addedCustomer.setEmail(FAKER.internet().safeEmailAddress());
         addedCustomer.setAge(customer.getAge() + RANDOM.nextInt(2, 10));
+        addedCustomer.setGender(customer.getGender().equals(Customer.Gender.FEMALE) ? Customer.Gender.MALE : Customer.Gender.FEMALE);
 
         //When
         underTest.updateCustomer(addedCustomer);
@@ -166,6 +169,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         assertThat(updatedCustomer.getName().equals(addedCustomer.getName())).isTrue();
         assertThat(updatedCustomer.getEmail().equals(addedCustomer.getEmail())).isTrue();
         assertThat(updatedCustomer.getAge().equals(addedCustomer.getAge())).isTrue();
+        assertThat(updatedCustomer.getGender().equals(addedCustomer.getGender())).isTrue();
     }
 
     @Test
@@ -189,6 +193,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         assertThat(updatedCustomer.getName().equals(addedCustomer.getName())).isTrue();
         assertThat(updatedCustomer.getEmail().equals(addedCustomer.getEmail())).isTrue();
         assertThat(updatedCustomer.getAge().equals(addedCustomer.getAge())).isTrue();
+        assertThat(updatedCustomer.getGender().equals(addedCustomer.getGender())).isTrue();
     }
 
     @Test
@@ -209,6 +214,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         assertThat(updatedCustomer.getName().equals(addedCustomer.getName())).isTrue();
         assertThat(updatedCustomer.getEmail().equals(addedCustomer.getEmail())).isTrue();
         assertThat(updatedCustomer.getAge().equals(addedCustomer.getAge())).isTrue();
+        assertThat(updatedCustomer.getGender().equals(addedCustomer.getGender())).isTrue();
     }
 
     @Test
@@ -229,13 +235,36 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         assertThat(updatedCustomer.getName().equals(addedCustomer.getName())).isTrue();
         assertThat(updatedCustomer.getEmail().equals(addedCustomer.getEmail())).isTrue();
         assertThat(updatedCustomer.getAge().equals(addedCustomer.getAge())).isTrue();
+        assertThat(updatedCustomer.getGender().equals(addedCustomer.getGender())).isTrue();
+    }
+
+    @Test
+    void updateCustomerGender() {
+        //Given
+        Customer customer = getRandomCustomer();
+        underTest.insertCustomer(customer);
+        Customer addedCustomer = underTest.getCustomerById(getCustomerIdByEmail(customer.getEmail()))
+                .orElseThrow();
+        addedCustomer.setGender(customer.getGender().equals(Customer.Gender.FEMALE) ? Customer.Gender.MALE : Customer.Gender.FEMALE);
+
+        //When
+        underTest.updateCustomer(addedCustomer);
+        Customer updatedCustomer = underTest.getCustomerById(addedCustomer.getId())
+                .orElseThrow();
+
+        //Then
+        assertThat(updatedCustomer.getName().equals(addedCustomer.getName())).isTrue();
+        assertThat(updatedCustomer.getEmail().equals(addedCustomer.getEmail())).isTrue();
+        assertThat(updatedCustomer.getAge().equals(addedCustomer.getAge())).isTrue();
+        assertThat(updatedCustomer.getGender().equals(addedCustomer.getGender())).isTrue();
     }
 
     private Customer getRandomCustomer() {
         return new Customer(
                 FAKER.name().fullName(),
                 FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
-                RANDOM.nextInt(18, 40)
+                RANDOM.nextInt(18, 40),
+                RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE
         );
     }
 

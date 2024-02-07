@@ -33,7 +33,8 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age);
+        Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -56,7 +57,7 @@ public class CustomerIntegrationTest {
                 .getResponseBody();
 
         // Make sure that customer is present
-        Customer expectedCustomer = new Customer(name, email, age);
+        Customer expectedCustomer = new Customer(name, email, age, gender);
         assertThat(allCustomers).usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
                 .contains(expectedCustomer);
 
@@ -86,7 +87,8 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age);
+        Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -136,7 +138,8 @@ public class CustomerIntegrationTest {
         String name = faker.name().fullName();
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age);
+        Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -168,7 +171,8 @@ public class CustomerIntegrationTest {
         String newName = faker.name().fullName();
         String newEmail = faker.internet().safeEmailAddress();
         Integer newAge = RANDOM.nextInt(18, 48);
-        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(newName, newEmail, newAge);
+        Customer.Gender newGender = gender.equals(Customer.Gender.FEMALE) ? Customer.Gender.MALE : Customer.Gender.FEMALE;
+        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(newName, newEmail, newAge, newGender);
 
         webTestClient.put().uri("/api/v1/customers" + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
@@ -179,7 +183,7 @@ public class CustomerIntegrationTest {
                 .isOk();
 
         // Verify customer changes
-        Customer expectedCustomer = new Customer(id, newName, newEmail, newAge);
+        Customer expectedCustomer = new Customer(id, newName, newEmail, newAge, newGender);
         webTestClient.get().uri("/api/v1/customers" + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

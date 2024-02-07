@@ -21,7 +21,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public List<Customer> getAllCustomers() {
         String sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, age, gender
                 FROM customer;
                 """;
         return jdbcTemplate.query(sql, customerRowMapper);
@@ -30,7 +30,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public Optional<Customer> getCustomerById(Long customerId) {
         String sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, age, gender
                 FROM customer
                 WHERE id = ?;
                 """;
@@ -42,14 +42,15 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public void insertCustomer(Customer customer) {
         String sql = """
-                INSERT INTO customer (name, email, age)
-                VALUES (?, ?, ?)
+                INSERT INTO customer (name, email, age, gender)
+                VALUES (?, ?, ?, ?)
                 """;
         int result = jdbcTemplate.update(
                 sql,
                 customer.getName(),
                 customer.getEmail(),
-                customer.getAge()
+                customer.getAge(),
+                customer.getGender().toString()
         );
         System.out.println("jdbcTemplate.update = " + result);
     }
@@ -114,6 +115,15 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
                     WHERE id = ?;
                     """;
             jdbcTemplate.update(sql, customer.getAge(), customer.getId());
+        }
+
+        if (Objects.nonNull(customer.getGender())) {
+            String sql = """
+                    UPDATE customer
+                    SET gender = ?
+                    WHERE id = ?;
+                    """;
+            jdbcTemplate.update(sql, customer.getGender().toString(), customer.getId());
         }
     }
 }
