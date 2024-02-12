@@ -12,8 +12,11 @@ import {
     Button,
     useColorModeValue, Tag,
 } from '@chakra-ui/react'
+import CustomerDeleteButton from "./CustomerDeleteButton.jsx";
+import EditCustomerDrawerForm from "./EditCustomerDrawerForm.jsx";
 
-export default function Card({ id, name, age, email, gender }) {
+export default function Card({ id, name, age, email, gender, fetchCustomers }) {
+    const properties = {id, name, age, email, gender, fetchCustomers}
     const genderType = gender.toUpperCase() === "MALE" ? "men" : "women";
     return (
         <Center py={6}>
@@ -44,8 +47,8 @@ export default function Card({ id, name, age, email, gender }) {
                         }}
                     />
                 </Flex>
-
-                <Box p={6}>
+                <Stack>
+                <Box p={6} alignContent={"bottom"}>
                     <Stack spacing={2} align={'center'} mb={5}>
                         <Tag borderRadius={"full"}>{id}</Tag>
                         <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
@@ -55,6 +58,18 @@ export default function Card({ id, name, age, email, gender }) {
                         <Text color={'gray.500'}>{`Age ${age} | ${gender.toUpperCase()}`}</Text>
                     </Stack>
                 </Box>
+                    <Stack direction={"row"} justifyContent={"center"} spacing={10} mb={1} minWidth={200}>
+                        <EditCustomerDrawerForm
+                            {...properties}
+                        />
+                        <CustomerDeleteButton
+                            fetchCustomers={fetchCustomers}
+                            customerId={id}
+                            customerName={name}
+                        />
+                    </Stack>
+
+                </Stack>
             </Box>
         </Center>
     )

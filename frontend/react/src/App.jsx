@@ -3,23 +3,31 @@ import SidebarWithHeader from "./components/shared/SideBar.jsx";
 import React, { useEffect, useState } from "react";
 import {getCustomers} from "./services/client.js";
 import Card from "./components/Card.jsx";
+import CreateCustomerDrawerForm from "./components/CreateCustomerDrawerForm.jsx";
+import {errorNotification} from "./services/notification.js";
 
 function App() {
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    useEffect(() => {
+    const fetchCustomers = () => {
         setLoading(true);
         getCustomers()
             .then(res => {
                 setCustomers(res.data);
             })
-            .catch(er => {
-                console.log(er);
+            .catch(error => {
+                setError(error);
+                console.log(error);
             })
             .finally(() => {
                 setLoading(false);
             })
+    }
+
+    useEffect(() => {
+        fetchCustomers();
     }, []);
 
     if (loading) {
@@ -36,21 +44,41 @@ function App() {
         );
     }
 
+    if (error) {
+        if (customers.length <= 0) {
+            return (
+                <SidebarWithHeader>
+                    <CreateCustomerDrawerForm
+                        fetchCustomers={fetchCustomers}
+                    />
+                    <Text mt={"5"}>Ooops, there was an error</Text>
+                </SidebarWithHeader>
+            );
+        }
+    }
+
     if (customers.length <= 0) {
         return (
             <SidebarWithHeader>
-                <Text>No customers available</Text>
+                <CreateCustomerDrawerForm
+                    fetchCustomers={fetchCustomers}
+                />
+                <Text mt={"5"}>No customers available</Text>
             </SidebarWithHeader>
         );
     }
 
     return (
         <SidebarWithHeader>
+            <CreateCustomerDrawerForm
+                fetchCustomers={fetchCustomers}
+            />
             <Wrap justify={"center"} spacing={"30px"}>
                 {customers.map((customer, index) => (
                     <WrapItem key={index}>
                         <Card
                             {...customer}
+                            fetchCustomers={fetchCustomers}
                         />
                     </WrapItem>
                 ))}

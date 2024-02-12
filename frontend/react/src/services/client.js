@@ -8,9 +8,28 @@ export const getCustomers = async () => {
     }
 }
 
-export const getRandomUser = async () => {
+export const saveCustomer = async (customer) => {
     try {
-        return await axios.get("https://randomuser.me/api/");
+        return await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`,
+            customer
+        );
+    } catch (e) {
+        throw e;
+    }
+}
+
+export const deleteCustomer = async (customerId) => {
+    try {
+        return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${customerId}`);
+    } catch (e) {
+        throw e;
+    }
+}
+
+export const editCustomer = async (customer) => {
+    try {
+        return await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${customer.id}`, customer);
     } catch (e) {
         throw e;
     }
