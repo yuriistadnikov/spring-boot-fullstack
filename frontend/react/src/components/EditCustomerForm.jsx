@@ -90,7 +90,7 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                         });
                 }}
             >
-                {({ isValid, isSubmitting }) => (
+                {({ isValid, isSubmitting , dirty}) => (
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
@@ -121,7 +121,7 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                             </MySelect>
 
 
-                            <Button isDisabled={!isValid || isSubmitting} type="submit">Save</Button>
+                            <Button isDisabled={!isValid || isSubmitting || !dirty} type="submit">Update customer</Button>
                         </Stack>
                     </Form>
                 )}

@@ -22,9 +22,11 @@ export default function Card({ id, name, age, email, gender, fetchCustomers }) {
         <Center py={6}>
             <Box
                 maxW={'300px'}
+                minW={'300px'}
+                m={2}
                 w={'full'}
                 bg={useColorModeValue('white', 'gray.800')}
-                boxShadow={'2xl'}
+                boxShadow={'lg'}
                 rounded={'md'}
                 overflow={'hidden'}>
                 <Image
@@ -48,16 +50,16 @@ export default function Card({ id, name, age, email, gender, fetchCustomers }) {
                     />
                 </Flex>
                 <Stack>
-                <Box p={6} alignContent={"bottom"}>
-                    <Stack spacing={2} align={'center'} mb={5}>
-                        <Tag borderRadius={"full"}>{id}</Tag>
-                        <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                            {name}
-                        </Heading>
-                        <Text color={'gray.500'}>{email}</Text>
-                        <Text color={'gray.500'}>{`Age ${age} | ${gender.toUpperCase()}`}</Text>
-                    </Stack>
-                </Box>
+                    <Box p={6} alignContent={"bottom"}>
+                        <Stack spacing={2} align={'center'} mb={5}>
+                            <Tag borderRadius={"full"}>{id}</Tag>
+                            <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+                                {name}
+                            </Heading>
+                            <Text color={'gray.500'}>{email}</Text>
+                            <Text color={'gray.500'}>{`Age ${age} | ${gender.toUpperCase()}`}</Text>
+                        </Stack>
+                    </Box>
                     <Stack direction={"row"} justifyContent={"center"} spacing={10} mb={1} minWidth={200}>
                         <EditCustomerDrawerForm
                             {...properties}

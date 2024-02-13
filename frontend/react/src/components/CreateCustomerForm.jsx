@@ -38,7 +38,7 @@ const MySelect = ({ label, ...props }) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({ id, name, email, age, gender, fetchCustomers }) => {
+const CreateCustomerForm = ({ fetchCustomers }) => {
     return (
         <>
             <Formik
@@ -75,7 +75,6 @@ const CreateCustomerForm = ({ id, name, email, age, gender, fetchCustomers }) =>
                                 "Customer saved",
                                 `${customer.name} was successfully saved`
                             );
-                            onClose();
                             fetchCustomers();
                         })
                         .catch(error => {

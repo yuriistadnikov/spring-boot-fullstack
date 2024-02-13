@@ -24,7 +24,7 @@ export default function EditCustomerDrawerForm(properties) {
                     }}
                     _focus={{
                         bg: 'green.500'
-                    }}>Edit</Button>
+                    }}>Update Customer</Button>
             <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
                 <DrawerOverlay />
                 <DrawerContent>
