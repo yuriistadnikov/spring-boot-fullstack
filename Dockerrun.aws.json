@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "yuriistadnikov-api",
-      "image": "yuriistadnikov/yuriistadnikov-api:07.02.2024.18.35.48",
+      "image": "yuriistadnikov/yuriistadnikov-api:14.02.2024.18.28.14",
       "essential": true,
       "memory": 512,
       "portMappings": [
