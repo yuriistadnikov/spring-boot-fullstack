@@ -15,6 +15,7 @@ function App() {
         setLoading(true);
         getCustomers()
             .then(res => {
+                console.log(res.data);
                 setCustomers(res.data);
             })
             .catch(error => {
