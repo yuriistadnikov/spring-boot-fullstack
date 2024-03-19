@@ -15,7 +15,7 @@
     },
     {
       "name": "yuriistadnikov-api",
-      "image": "yuriistadnikov/yuriistadnikov-api:14.02.2024.18.28.14",
+      "image": "yuriistadnikov/yuriistadnikov-api:19.03.2024.18.20.29",
       "essential": true,
       "memory": 512,
       "portMappings": [
