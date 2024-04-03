@@ -1,2 +1,0 @@
-ALTER TABLE customer
-ADD COLUMN gender TEXT NOT NULL CHECK ( UPPER(gender) IN ('MALE', 'FEMALE') );

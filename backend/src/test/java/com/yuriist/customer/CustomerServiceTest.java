@@ -3,21 +3,19 @@ package com.yuriist.customer;
 import com.yuriist.exceptions.DuplicateResourceException;
 import com.yuriist.exceptions.RequestValidationException;
 import com.yuriist.exceptions.ResourceNotFoundException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -27,12 +25,15 @@ class CustomerServiceTest {
     @Mock
     private CustomerDao customerDao;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private AutoCloseable autoCloseable;
 
 
     @BeforeEach
     void setUp() {
-        underTest = new CustomerService(customerDao);
+        underTest = new CustomerService(customerDao, passwordEncoder);
     }
 
     @Test
@@ -48,7 +49,7 @@ class CustomerServiceTest {
     void canGetCustomerById() {
         // Given
         Long id = 10L;
-        Customer customer = new Customer(id, "Alex", "alex@gmail.com", 20, Customer.Gender.MALE);
+        Customer customer = new Customer(id, "Alex", "Pass123456", "alex@gmail.com", 20, Customer.Gender.MALE);
         Mockito.when(customerDao.getCustomerById(id)).thenReturn(Optional.of(customer)); //Implement behaviour
 
         //When
@@ -103,7 +104,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         String newCustomerName = "Brand";
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(newCustomerName, null, null, null);
@@ -118,7 +119,7 @@ class CustomerServiceTest {
                 new Customer(
                         customer.getId(),
                         customerUpdateRequest.getName(),
-                        customer.getEmail(),
+                        "Pass123456", customer.getEmail(),
                         customer.getAge(),
                         customer.getGender()
                 )
@@ -133,7 +134,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         String newCustomerEmail = "brand@gmail.com";
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null, newCustomerEmail, null, null);
@@ -173,7 +174,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         Integer newCustomerAge = 25;
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null, null, newCustomerAge, null);
@@ -188,7 +189,7 @@ class CustomerServiceTest {
                 new Customer(
                         customer.getId(),
                         customer.getName(),
-                        customer.getEmail(),
+                        "Pass123456", customer.getEmail(),
                         customerUpdateRequest.getAge(),
                         customer.getGender()
                 )
@@ -203,7 +204,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         Customer.Gender newGender = Customer.Gender.FEMALE;
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null, null, null, newGender);
@@ -218,7 +219,7 @@ class CustomerServiceTest {
                 new Customer(
                         customer.getId(),
                         customer.getName(),
-                        customer.getEmail(),
+                        "Pass123456", customer.getEmail(),
                         customer.getAge(),
                         customerUpdateRequest.getGender()
                 )
@@ -233,7 +234,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         String newCustomerEmail = "brand@gmail.com";
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(customerName, newCustomerEmail, customerAge, gender);
@@ -256,7 +257,7 @@ class CustomerServiceTest {
         String customerMail = "alex@gmail.com";
         Integer customerAge = 20;
         Customer.Gender gender = Customer.Gender.MALE;
-        Customer customer = new Customer(customerId, customerName, customerMail, customerAge, gender);
+        Customer customer = new Customer(customerId, customerName, "Pass123456", customerMail, customerAge, gender);
 
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(customerName, customerMail, customerAge, gender);
 
@@ -274,7 +275,10 @@ class CustomerServiceTest {
         // Given
         String email = "alex@gmail.com";
         Mockito.when(customerDao.existsPersonWithEmail(email)).thenReturn(false);
-        CustomerRegistrationRequest customerRegistrationRequest = new CustomerRegistrationRequest("Alex", email, 20, Customer.Gender.MALE);
+        CustomerRegistrationRequest customerRegistrationRequest = new CustomerRegistrationRequest("Alex", "Pass123456", email, 20, Customer.Gender.MALE);
+
+        String passwordHash = "aspidj376afl747adfs";
+        Mockito.when(passwordEncoder.encode(customerRegistrationRequest.getPassword())).thenReturn(passwordHash);
 
         //When
         underTest.addCustomer(customerRegistrationRequest);
@@ -287,6 +291,7 @@ class CustomerServiceTest {
 
         assertThat(capturedCustomer.getId()).isNull();
         assertThat(capturedCustomer.getName()).isEqualTo(customerRegistrationRequest.getName());
+        assertThat(capturedCustomer.getPassword()).isEqualTo(passwordHash);
         assertThat(capturedCustomer.getEmail()).isEqualTo(customerRegistrationRequest.getEmail());
         assertThat(capturedCustomer.getAge()).isEqualTo(customerRegistrationRequest.getAge());
         assertThat(capturedCustomer.getGender()).isEqualTo(customerRegistrationRequest.getGender());
@@ -297,7 +302,7 @@ class CustomerServiceTest {
         // Given
         String email = "alex@gmail.com";
         Mockito.when(customerDao.existsPersonWithEmail(email)).thenReturn(true);
-        CustomerRegistrationRequest customerRegistrationRequest = new CustomerRegistrationRequest("Alex", email, 20, Customer.Gender.MALE);
+        CustomerRegistrationRequest customerRegistrationRequest = new CustomerRegistrationRequest("Alex", "Pass123456", email, 20, Customer.Gender.MALE);
 
         //Then
         assertThatThrownBy(() -> underTest.addCustomer(customerRegistrationRequest))

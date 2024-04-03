@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface CustomerDao {
     List<Customer> getAllCustomers();
     Optional<Customer> getCustomerById(Long customerId);
+    Optional<Customer> getCustomerByEmail(String email);
     void insertCustomer(Customer customer);
     boolean existsPersonWithEmail(String email);
 

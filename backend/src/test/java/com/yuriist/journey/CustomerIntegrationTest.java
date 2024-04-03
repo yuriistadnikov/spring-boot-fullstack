@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import com.yuriist.customer.Customer;
 import com.yuriist.customer.CustomerRegistrationRequest;
 import com.yuriist.customer.CustomerUpdateRequest;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +33,7 @@ public class CustomerIntegrationTest {
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
         Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, "Pass123456", email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -57,7 +56,7 @@ public class CustomerIntegrationTest {
                 .getResponseBody();
 
         // Make sure that customer is present
-        Customer expectedCustomer = new Customer(name, email, age, gender);
+        Customer expectedCustomer = new Customer(name, "Pass123456", email, age, gender);
         assertThat(allCustomers).usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
                 .contains(expectedCustomer);
 
@@ -88,7 +87,7 @@ public class CustomerIntegrationTest {
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
         Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, "Pass123456", email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -139,7 +138,7 @@ public class CustomerIntegrationTest {
         String email = faker.internet().safeEmailAddress();
         Integer age = RANDOM.nextInt(18, 48);
         Customer.Gender gender = RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE;
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, email, age, gender);
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(name, "Pass123456", email, age, gender);
 
         // Send a post request
         webTestClient.post().uri("/api/v1/customers")
@@ -183,7 +182,7 @@ public class CustomerIntegrationTest {
                 .isOk();
 
         // Verify customer changes
-        Customer expectedCustomer = new Customer(id, newName, newEmail, newAge, newGender);
+        Customer expectedCustomer = new Customer(id, newName, "Pass123456", newEmail, newAge, newGender);
         webTestClient.get().uri("/api/v1/customers" + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

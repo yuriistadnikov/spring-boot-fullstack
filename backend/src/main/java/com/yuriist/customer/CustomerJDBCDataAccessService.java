@@ -21,7 +21,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public List<Customer> getAllCustomers() {
         String sql = """
-                SELECT id, name, email, age, gender
+                SELECT id, name, password, email, age, gender
                 FROM customer;
                 """;
         return jdbcTemplate.query(sql, customerRowMapper);
@@ -30,7 +30,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public Optional<Customer> getCustomerById(Long customerId) {
         String sql = """
-                SELECT id, name, email, age, gender
+                SELECT id, name, password, email, age, gender
                 FROM customer
                 WHERE id = ?;
                 """;
@@ -40,14 +40,27 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     }
 
     @Override
+    public Optional<Customer> getCustomerByEmail(String email) {
+        String sql = """
+                SELECT id, name, password, email, age, gender
+                FROM customer
+                WHERE email = ?;
+                """;
+        return jdbcTemplate.query(sql, customerRowMapper, email)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public void insertCustomer(Customer customer) {
         String sql = """
-                INSERT INTO customer (name, email, age, gender)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO customer (name, password, email, age, gender)
+                VALUES (?, ?, ?, ?, ?)
                 """;
         int result = jdbcTemplate.update(
                 sql,
                 customer.getName(),
+                customer.getPassword(),
                 customer.getEmail(),
                 customer.getAge(),
                 customer.getGender().toString()

@@ -3,14 +3,12 @@ package com.yuriist.customer;
 import com.yuriist.AbstractTestContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
 
@@ -262,6 +260,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
     private Customer getRandomCustomer() {
         return new Customer(
                 FAKER.name().fullName(),
+                "Pass123456",
                 FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
                 RANDOM.nextInt(18, 40),
                 RANDOM.nextBoolean() ? Customer.Gender.MALE : Customer.Gender.FEMALE
