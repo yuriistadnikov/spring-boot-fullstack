@@ -1,15 +1,12 @@
 package com.yuriist.customer;
 
 import com.github.javafaker.Faker;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerJpaDataAccessServiceTest {
 
@@ -55,7 +52,7 @@ class CustomerJpaDataAccessServiceTest {
     @Test
     void insertCustomer() {
         // Given
-        Customer customer = new Customer("Name", "Email", 10, Customer.Gender.MALE);
+        Customer customer = new Customer("Name", "Pass123456", "Email", 10, Customer.Gender.MALE);
 
         //When
         underTest.insertCustomer(customer);
@@ -103,7 +100,7 @@ class CustomerJpaDataAccessServiceTest {
     @Test
     void updateCustomer() {
         // Given
-        Customer customer = new Customer(1L, "Name", "Email", 10, Customer.Gender.MALE);
+        Customer customer = new Customer(1L, "Name", "Pass123456", "Email", 10, Customer.Gender.MALE);
 
         //When
         underTest.updateCustomer(customer);

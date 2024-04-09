@@ -1,5 +1,8 @@
 package com.yuriist.customer;
 
+import com.yuriist.security.jwt.JWTUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,18 +11,20 @@ import java.util.List;
 @RequestMapping("api/v1/customers")
 public class CustomerController {
     private final CustomerService customerService;
+    private final JWTUtil jwtUtil;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, JWTUtil jwtUtil) {
         this.customerService = customerService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping()
-    public List<Customer> getCustomers() {
+    public List<CustomerDTO> getCustomers() {
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{customerId}")
-    public Customer getCustomer(@PathVariable Long customerId) {
+    public CustomerDTO getCustomer(@PathVariable Long customerId) {
         return customerService.getCustomerById(customerId);
     }
 
@@ -34,7 +39,11 @@ public class CustomerController {
     }
 
     @PostMapping()
-    public void registerCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest) {
+    public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest) {
         customerService.addCustomer(customerRegistrationRequest);
+        String jwtToken = jwtUtil.issueToken(customerRegistrationRequest.getEmail(), "ROLE_USER");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtToken)
+                .build();
     }
 }

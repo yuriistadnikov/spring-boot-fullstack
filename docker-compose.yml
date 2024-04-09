@@ -14,33 +14,33 @@ services:
       - db
     restart: unless-stopped
 
-  yuriistadnikov-api:
-    container_name: yuriistadnikov-api
-    image: yuriistadnikov/yuriistadnikov-api
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/customer"
-    ports:
-      - "8088:8080"
-    networks:
-      - db
-    depends_on:
-      - db
-    restart: unless-stopped
-    command:
-      - --spring.datasource.url=jdbc:postgresql://db:5432/customer
-
-  yuriistadnikov-react:
-    container_name: yuriistadnikov-react
-    image: yuriistadnikov/yuriistadnikov-react
-    build:
-      context: frontend/react
-      args:
-        api_base_url: http://localhost:8088
-    ports:
-      - "3000:5173"
-    depends_on:
-      - yuriistadnikov-api
-    restart: unless-stopped
+#  yuriistadnikov-api:
+#    container_name: yuriistadnikov-api
+#    image: yuriistadnikov/yuriistadnikov-api
+#    environment:
+#      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/customer"
+#    ports:
+#      - "8088:8080"
+#    networks:
+#      - db
+#    depends_on:
+#      - db
+#    restart: unless-stopped
+#    command:
+#      - --spring.datasource.url=jdbc:postgresql://db:5432/customer
+#
+#  yuriistadnikov-react:
+#    container_name: yuriistadnikov-react
+#    image: yuriistadnikov/yuriistadnikov-react
+#    build:
+#      context: frontend/react
+#      args:
+#        api_base_url: http://localhost:8088
+#    ports:
+#      - "3000:5173"
+#    depends_on:
+#      - yuriistadnikov-api
+#    restart: unless-stopped
 
 networks:
   db:
