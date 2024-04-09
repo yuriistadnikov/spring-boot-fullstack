@@ -10,23 +10,30 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
     private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerDTOMapper customerDTOMapper;
 
-    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao, PasswordEncoder passwordEncoder) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao, PasswordEncoder passwordEncoder, CustomerDTOMapper customerDTOMapper) {
         this.customerDao = customerDao;
         this.passwordEncoder = passwordEncoder;
+        this.customerDTOMapper = customerDTOMapper;
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerDao.getAllCustomers();
+    public List<CustomerDTO> getAllCustomers() {
+        return customerDao.getAllCustomers()
+                .stream()
+                .map(customerDTOMapper)
+                .collect(Collectors.toList());
     }
 
-    public Customer getCustomerById(Long customerId) {
+    public CustomerDTO getCustomerById(Long customerId) {
         return customerDao.getCustomerById(customerId)
+                .map(customerDTOMapper)
                 .orElseThrow(() -> new ResourceNotFoundException("Couldn't find customer with id %s".formatted(customerId)));
 
     }
@@ -39,7 +46,9 @@ public class CustomerService {
     }
 
     public void updateCustomerById(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
-        Customer customer = getCustomerById(customerId);
+        Customer customer = customerDao.getCustomerById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Couldn't find customer with id %s".formatted(customerId)));
+
         boolean hasChanges = false;
         if (StringUtils.hasText(customerUpdateRequest.getName()) && !customerUpdateRequest.getName().equals(customer.getName())) {
             customer.setName(customerUpdateRequest.getName());

@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CustomerServiceTest {
 
     private CustomerService underTest;
+    private CustomerDTOMapper customerDTOMapper;
 
     @Mock
     private CustomerDao customerDao;
@@ -33,7 +34,7 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new CustomerService(customerDao, passwordEncoder);
+        underTest = new CustomerService(customerDao, passwordEncoder, customerDTOMapper);
     }
 
     @Test
@@ -52,11 +53,13 @@ class CustomerServiceTest {
         Customer customer = new Customer(id, "Alex", "Pass123456", "alex@gmail.com", 20, Customer.Gender.MALE);
         Mockito.when(customerDao.getCustomerById(id)).thenReturn(Optional.of(customer)); //Implement behaviour
 
+        CustomerDTO expectedCustomer = customerDTOMapper.apply(customer);
+
         //When
-        Customer actual = underTest.getCustomerById(id);
+        CustomerDTO actual = underTest.getCustomerById(id);
 
         //Then
-        assertThat(actual).isEqualTo(customer);
+        assertThat(actual).isEqualTo(expectedCustomer);
     }
 
     @Test
