@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CustomerServiceTest {
 
     private CustomerService underTest;
-    private CustomerDTOMapper customerDTOMapper;
+    private CustomerDTOMapper customerDTOMapper = new CustomerDTOMapper();;
 
     @Mock
     private CustomerDao customerDao;
