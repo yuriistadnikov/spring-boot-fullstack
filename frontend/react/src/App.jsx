@@ -1,9 +1,9 @@
 import {Wrap, WrapItem, Spinner, Text} from '@chakra-ui/react'
 import SidebarWithHeader from "./components/shared/SideBar.jsx";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {getCustomers} from "./services/client.js";
-import Card from "./components/Card.jsx";
-import CreateCustomerDrawerForm from "./components/CreateCustomerDrawerForm.jsx";
+import Card from "./components/customer/Card.jsx";
+import CreateCustomerDrawerForm from "./components/customer/CreateCustomerDrawerForm.jsx";
 import {errorNotification} from "./services/notification.js";
 
 function App() {
@@ -20,6 +20,10 @@ function App() {
             })
             .catch(error => {
                 setError(error);
+                errorNotification(
+                    error.code,
+                    error.response.data.message
+                );
                 console.log(error);
             })
             .finally(() => {

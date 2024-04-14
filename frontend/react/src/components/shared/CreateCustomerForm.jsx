@@ -2,8 +2,8 @@ import React from 'react';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {editCustomer, saveCustomer} from "../services/client.js";
-import {errorNotification, successNotification} from "../services/notification.js";
+import {saveCustomer} from "../../services/client.js";
+import {errorNotification, successNotification} from "../../services/notification.js";
 
 const MyTextInput = ({ label, ...props }) => {
     const [field, meta] = useField(props);
@@ -38,16 +38,16 @@ const MySelect = ({ label, ...props }) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) => {
+const CreateCustomerForm = ({ onSuccess }) => {
     return (
         <>
             <Formik
                 initialValues={{
-                    id: id,
-                    name: name,
-                    email: email,
-                    age: age,
-                    gender: gender,
+                    name: '',
+                    email: '',
+                    age: 0,
+                    password: '',
+                    gender: '',
                 }}
                 validationSchema={Yup.object({
                     name: Yup.string()
@@ -60,6 +60,10 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                         .min(16, "Must be at least 16 years of age")
                         .max(100, "Must be less than 100 years of age")
                         .required('Required'),
+                    password: Yup.string()
+                        .min(4, 'Must be 4 characters or more')
+                        .max(15, 'Must be 15 characters or less')
+                        .required('Required'),
                     gender: Yup.string()
                         .oneOf(
                             ['MALE', 'FEMALE'],
@@ -69,14 +73,14 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                 })}
                 onSubmit={(customer, { setSubmitting }) => {
                     setSubmitting(true);
-                    editCustomer(customer)
+                    saveCustomer(customer)
                         .then(res => {
                             console.log(res);
                             successNotification(
-                                "Customer changed",
-                                "Changes was successfully saved"
+                                "Customer saved",
+                                `${customer.name} was successfully saved`
                             );
-                            fetchCustomers();
+                            onSuccess(res.headers["authorization"]);
                         })
                         .catch(error => {
                             console.log(error);
@@ -90,28 +94,35 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                         });
                 }}
             >
-                {({ isValid, isSubmitting , dirty}) => (
+                {({ isValid, isSubmitting }) => (
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
                                 label="Name"
                                 name="name"
                                 type="text"
-                                placeholder="Name"
+                                placeholder="Jane"
                             />
 
                             <MyTextInput
                                 label="Email"
                                 name="email"
                                 type="email"
-                                placeholder="Email"
+                                placeholder="jane@formik.com"
                             />
 
                             <MyTextInput
                                 label="Age"
                                 name="age"
                                 type="number"
-                                placeholder="Age"
+                                placeholder="20"
+                            />
+
+                            <MyTextInput
+                                label="Password"
+                                name="password"
+                                type="password"
+                                placeholder={"Pick a secure password"}
                             />
 
                             <MySelect label="Gender" name="gender">
@@ -121,7 +132,7 @@ const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) =>
                             </MySelect>
 
 
-                            <Button isDisabled={!isValid || isSubmitting || !dirty} type="submit">Update customer</Button>
+                            <Button isDisabled={!isValid || isSubmitting} type="submit">Submit</Button>
                         </Stack>
                     </Form>
                 )}

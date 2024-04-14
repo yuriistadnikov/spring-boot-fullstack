@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AuthenticationIntegrationTest {
 
     private static final Random RANDOM = new Random();
-    private static final String AUTH_PATH = "api/v1/auth";
+    private static final String AUTH_PATH = "api/v1/auth/login";
     public static final String CUSTOMER_PATH = "/api/v1/customers";
 
     @Autowired

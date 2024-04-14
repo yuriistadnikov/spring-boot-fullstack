@@ -2,8 +2,8 @@ import React from 'react';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {saveCustomer} from "../services/client.js";
-import {errorNotification, successNotification} from "../services/notification.js";
+import {editCustomer, saveCustomer} from "../../services/client.js";
+import {errorNotification, successNotification} from "../../services/notification.js";
 
 const MyTextInput = ({ label, ...props }) => {
     const [field, meta] = useField(props);
@@ -38,15 +38,16 @@ const MySelect = ({ label, ...props }) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({ fetchCustomers }) => {
+const CreateCustomerForm = ({ id, name, age, email, gender, fetchCustomers }) => {
     return (
         <>
             <Formik
                 initialValues={{
-                    name: '',
-                    email: '',
-                    age: 0,
-                    gender: '',
+                    id: id,
+                    name: name,
+                    email: email,
+                    age: age,
+                    gender: gender,
                 }}
                 validationSchema={Yup.object({
                     name: Yup.string()
@@ -68,12 +69,12 @@ const CreateCustomerForm = ({ fetchCustomers }) => {
                 })}
                 onSubmit={(customer, { setSubmitting }) => {
                     setSubmitting(true);
-                    saveCustomer(customer)
+                    editCustomer(customer)
                         .then(res => {
                             console.log(res);
                             successNotification(
-                                "Customer saved",
-                                `${customer.name} was successfully saved`
+                                "Customer changed",
+                                "Changes was successfully saved"
                             );
                             fetchCustomers();
                         })
@@ -89,28 +90,28 @@ const CreateCustomerForm = ({ fetchCustomers }) => {
                         });
                 }}
             >
-                {({ isValid, isSubmitting }) => (
+                {({ isValid, isSubmitting , dirty}) => (
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
                                 label="Name"
                                 name="name"
                                 type="text"
-                                placeholder="Jane"
+                                placeholder="Name"
                             />
 
                             <MyTextInput
                                 label="Email"
                                 name="email"
                                 type="email"
-                                placeholder="jane@formik.com"
+                                placeholder="Email"
                             />
 
                             <MyTextInput
                                 label="Age"
                                 name="age"
                                 type="number"
-                                placeholder="20"
+                                placeholder="Age"
                             />
 
                             <MySelect label="Gender" name="gender">
@@ -120,7 +121,7 @@ const CreateCustomerForm = ({ fetchCustomers }) => {
                             </MySelect>
 
 
-                            <Button isDisabled={!isValid || isSubmitting} type="submit">Submit</Button>
+                            <Button isDisabled={!isValid || isSubmitting || !dirty} type="submit">Update customer</Button>
                         </Stack>
                     </Form>
                 )}

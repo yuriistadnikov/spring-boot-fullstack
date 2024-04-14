@@ -9,8 +9,8 @@ import {
     Button,
 } from '@chakra-ui/react'
 import { useRef } from "react";
-import {errorNotification, successNotification} from "../services/notification.js";
-import {deleteCustomer} from "../services/client.js";
+import {errorNotification, successNotification} from "../../services/notification.js";
+import {deleteCustomer} from "../../services/client.js";
 
 export default function CustomerDeleteButton({ fetchCustomers, customerId, customerName }) {
     const { isOpen, onOpen, onClose } = useDisclosure()

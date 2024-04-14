@@ -8,7 +8,7 @@ import {
     DrawerOverlay,
     Input, useDisclosure
 } from "@chakra-ui/react";
-import CreateCustomerForm from "./CreateCustomerForm.jsx";
+import CreateCustomerForm from "../shared/CreateCustomerForm.jsx";
 import EditCustomerForm from "./EditCustomerForm.jsx";
 
 export default function EditCustomerDrawerForm(properties) {

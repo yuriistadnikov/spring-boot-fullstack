@@ -8,7 +8,7 @@ import {
     DrawerOverlay,
     Input, useDisclosure
 } from "@chakra-ui/react";
-import CreateCustomerForm from "./CreateCustomerForm.jsx";
+import CreateCustomerForm from "../shared/CreateCustomerForm.jsx";
 
 export default function CreateCustomerDrawerForm({ fetchCustomers }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -23,7 +23,7 @@ export default function CreateCustomerDrawerForm({ fetchCustomers }) {
 
                     <DrawerBody>
                         <CreateCustomerForm
-                            fetchCustomers={fetchCustomers}
+                            onSuccess={fetchCustomers}
                         />
                     </DrawerBody>
 
